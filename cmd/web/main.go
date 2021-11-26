@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"github.com/adrialopezbou/bookings-go/pkg/config"
-	"github.com/adrialopezbou/bookings-go/pkg/handlers"
-	"github.com/adrialopezbou/bookings-go/pkg/render"
+	"github.com/adrialopezbou/bookings-go/internal/config"
+	"github.com/adrialopezbou/bookings-go/internal/handlers"
+	"github.com/adrialopezbou/bookings-go/internal/render"
 	"time"
 
 	"net/http"
