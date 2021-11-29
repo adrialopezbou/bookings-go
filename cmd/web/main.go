@@ -1,12 +1,16 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
+	"os"
+	"time"
+
 	"github.com/adrialopezbou/bookings-go/internal/config"
 	"github.com/adrialopezbou/bookings-go/internal/handlers"
+	"github.com/adrialopezbou/bookings-go/internal/models"
 	"github.com/adrialopezbou/bookings-go/internal/render"
-	"time"
 
 	"net/http"
 
@@ -21,28 +25,10 @@ var session *scs.SessionManager
 
 // main is the main application function
 func main() {
-	// change this to true when in production
-	app.InProduction = false
-
-	session = scs.New()
-	session.Lifetime = 24 * time.Hour
-	session.Cookie.Persist = true
-	session.Cookie.SameSite = http.SameSiteLaxMode
-	session.Cookie.Secure = app.InProduction
-
-	app.Session = session
-
-	tc, err := render.CreateTemplateCache()
+	err := run()
 	if err != nil {
-		log.Fatal("cannot create template cache")
+		log.Fatal(err)
 	}
-
-	app.TemplateCache = tc
-	app.UseCache = false
-
-	repo := handlers.NewRepo(&app)
-	handlers.NewHandlers(repo)
-	render.NewTemplates(&app)
 
 	fmt.Println(fmt.Sprint("Starting application on port", portNumber))
 
@@ -55,4 +41,38 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func run() error {
+	// what am I going to put in the session
+	gob.Register(models.Reservation{})
+	
+	// change this to true when in production
+	app.InProduction = false
+
+	app.InfoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	app.ErrorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = app.InProduction
+
+	app.Session = session
+
+	tc, err := render.CreateTemplateCache()
+	if err != nil {
+		log.Fatal("cannot create template cache")
+		return err
+	}
+
+	app.TemplateCache = tc
+	app.UseCache = false
+
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandlers(repo)
+	render.NewTemplates(&app)
+
+	return nil
 }
