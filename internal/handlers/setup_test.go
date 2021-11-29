@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -36,6 +37,8 @@ func getRoutes() http.Handler {
 	session.Cookie.Secure = app.InProduction
 
 	app.Session = session
+	app.InfoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	app.ErrorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	tc, err := CreateTestTemplateCache()
 	if err != nil {

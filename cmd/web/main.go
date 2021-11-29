@@ -9,6 +9,7 @@ import (
 
 	"github.com/adrialopezbou/bookings-go/internal/config"
 	"github.com/adrialopezbou/bookings-go/internal/handlers"
+	"github.com/adrialopezbou/bookings-go/internal/helpers"
 	"github.com/adrialopezbou/bookings-go/internal/models"
 	"github.com/adrialopezbou/bookings-go/internal/render"
 
@@ -73,6 +74,7 @@ func run() error {
 	repo := handlers.NewRepo(&app)
 	handlers.NewHandlers(repo)
 	render.NewTemplates(&app)
+	helpers.NewHelpers(&app)
 
 	return nil
 }
