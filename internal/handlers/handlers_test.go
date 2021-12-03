@@ -328,7 +328,53 @@ func TestRepository_AvailabilityJSON(t *testing.T) {
 		t.Error("failed to parse json")
 	}
 
+	// test for error parsing form
+	req, _ = http.NewRequest("POST", "/search-availability-json", nil)
 
+	ctx = getCtx(req)
+	req = req.WithContext(ctx)
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	handler = http.HandlerFunc(Repo.AvailabilityJSON)
+
+	rr = httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+	err = json.Unmarshal(rr.Body.Bytes(), &j)
+	if err != nil {
+		t.Error("failed to parse json")
+	}
+
+	if j.Ok {
+		t.Error("empty body on post didn't return an error when parsing form")
+	}
+
+	// test for error parsing form
+	reqBody = "start=01-01-2050"
+	reqBody = fmt.Sprintf("%s&%s", reqBody, "end=01-02-2050")
+	reqBody = fmt.Sprintf("%s&%s", reqBody, "room_id=2")
+
+	req, _ = http.NewRequest("POST", "/search-availability-json", strings.NewReader(reqBody))
+
+	ctx = getCtx(req)
+	req = req.WithContext(ctx)
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	handler = http.HandlerFunc(Repo.AvailabilityJSON)
+
+	rr = httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+	err = json.Unmarshal(rr.Body.Bytes(), &j)
+	if err != nil {
+		t.Error("failed to parse json")
+	}
+
+	if j.Ok {
+		t.Error("didn't return an error when failing inserting into database")
+	}
 
 }
 
