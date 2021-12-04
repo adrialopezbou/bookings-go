@@ -12,6 +12,7 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
 	github.com/jackc/pgconn v1.10.1
 	github.com/jackc/pgx/v4 v4.13.0
+	github.com/xhit/go-simple-mail/v2 v2.10.0
 )
 
 require (

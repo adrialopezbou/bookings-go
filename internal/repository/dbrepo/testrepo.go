@@ -29,7 +29,7 @@ func (m *testDBRepo) InsertRoomRestriction(r models.RoomRestriction) error {
 }
 
 // SearchAvailabilityByDates returns true if availability exists
-func (m *testDBRepo) SearchAvailabilityByDatesAndRoomID(start, end time.Time, roomID int) (bool, error) {
+func (m *testDBRepo) SearchAvailabilityByDatesAndRoomId(start, end time.Time, roomID int) (bool, error) {
 	if roomID == 2 {
 		return false, errors.New("some error")
 	}
@@ -43,7 +43,7 @@ func (m *testDBRepo) SearchAvailabilityForAllRooms(start, end time.Time)  ([]mod
 }
 
 // GetRoomByID gets a room by id
-func (m *testDBRepo) GetRoomByID(id int) (models.Room, error) {
+func (m *testDBRepo) GetRoomById(id int) (models.Room, error) {
 	var room models.Room
 
 	if id > 2 {
@@ -51,4 +51,20 @@ func (m *testDBRepo) GetRoomByID(id int) (models.Room, error) {
 	}
 	
 	return room, nil
+}
+
+func (m *testDBRepo) GetUserById(id int) (models.User, error) {
+	var u models.User
+	return u, nil
+}
+
+
+func (m *testDBRepo) UpdateUser(u models.User) error {
+	return nil
+}
+
+
+func (m *testDBRepo) Authenticate(email, testPassword string) (int, string, error) {
+
+	return 0, "", nil
 }

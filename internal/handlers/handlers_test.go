@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 	"time"
@@ -131,7 +132,17 @@ func TestRepository_PostReservation(t *testing.T) {
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "phone=66582")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "room_id=1")
 
-	req, _ := http.NewRequest("POST", "/make-reservation", strings.NewReader(reqBody))
+	//better method to create post body
+	postedData := url.Values{}
+	postedData.Add("start_date", "01-01-2050")
+	postedData.Add("end_date", "02-01-2050")
+	postedData.Add("first_name", "adria")
+	postedData.Add("last_name", "lopez")
+	postedData.Add("email", "adria@lopez.es")
+	postedData.Add("phone", "66582")
+	postedData.Add("room_id", "1")
+
+	req, _ := http.NewRequest("POST", "/make-reservation", strings.NewReader(postedData.Encode()))
 	ctx := getCtx(req)
 	req = req.WithContext(ctx)
 
